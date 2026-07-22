@@ -59,12 +59,38 @@ model Agendamento {
   id               String    @id @default(cuid())
   paciente         Paciente  @relation(fields: [pacienteId], references: [id])
   pacienteId       String
+  local            Local?    @relation(fields: [localId], references: [id])
+  localId          String?
   inicio           DateTime
   fim              DateTime?
-  procedimentoNome String?
-  status           String    @default("agendado") // agendado|confirmado|atendido|faltou|cancelado
+  procedimentoNome String? // escolhido do catálogo de Procedimentos
+  descricao        String? // informações gerais do agendamento (observações do contato etc.)
+  status           String    @default("a_confirmar") // a_confirmar|confirmado|compareceu|desmarcou|faltou
   observacoes      String?
   criadoEm         DateTime  @default(now())
+}
+
+// Locais/cidades onde o Dr. Gustavo atende
+model Local {
+  id           String        @id @default(cuid())
+  nome         String // ex.: "Consultório Recife", "Clínica Parceira SP"
+  cidade       String
+  uf           String
+  endereco     String?
+  ativo        Boolean       @default(true)
+  criadoEm     DateTime      @default(now())
+  agendamentos Agendamento[]
+}
+
+// Bloqueios de indisponibilidade (dia inteiro ou faixa de horário)
+model Bloqueio {
+  id         String   @id @default(cuid())
+  data       DateTime // o dia do bloqueio
+  diaInteiro Boolean  @default(true)
+  horaInicio String? // "HH:MM" — usado quando NÃO for dia inteiro
+  horaFim    String? // "HH:MM"
+  motivo     String?
+  criadoEm   DateTime @default(now())
 }
 
 model Orcamento {
