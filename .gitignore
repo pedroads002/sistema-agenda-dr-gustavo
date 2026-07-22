@@ -4,9 +4,11 @@ node_modules/
 # Banco de dados (arquivo local, não deve ir para o Git)
 *.db
 *.db-journal
+backend/data/
 
 # Uploads (fotos, termos assinados) — dados sensíveis, ficam só na máquina
 backend/src/uploads/
+backend/uploads/
 
 # Variáveis de ambiente (segredos: chave do JWT, etc.)
 .env
