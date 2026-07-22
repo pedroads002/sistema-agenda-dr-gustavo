@@ -18,6 +18,7 @@ dist/
 build/
 frontend/dist/
 backend/dist/
+*.tsbuildinfo
 
 # Logs
 *.log

@@ -1,0 +1,147 @@
+// schema.prisma — modelo de dados do sistema Dr. Gustavo Amaral
+// Baseado na seção 7 de docs/DOCUMENTACAO-SISTEMA-DR-GUSTAVO.md
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  nome         String
+  email        String   @unique
+  senhaHash    String
+  ativo        Boolean  @default(true)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+}
+
+model Paciente {
+  id           String    @id @default(cuid())
+  nome         String
+  cpf          String?
+  telefone     String?
+  email        String?
+  nascimento   DateTime?
+  sexo         String?
+  endereco     String?
+  observacoes  String?
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  agendamentos   Agendamento[]
+  orcamentos     Orcamento[]
+  procedimentos  ProcedimentoRealizado[]
+  pagamentos     Pagamento[]
+  anamneses      Anamnese[]
+  consentimentos Consentimento[]
+  fotos          Foto[]
+}
+
+model Procedimento {
+  id         String   @id @default(cuid())
+  nome       String
+  categoria  String // facial | intima_masculina | intima_feminina | corporal | outros
+  valorBase  Float    @default(0)
+  duracaoMin Int      @default(60)
+  ativo      Boolean  @default(true)
+  criadoEm   DateTime @default(now())
+}
+
+model Agendamento {
+  id               String    @id @default(cuid())
+  paciente         Paciente  @relation(fields: [pacienteId], references: [id])
+  pacienteId       String
+  inicio           DateTime
+  fim              DateTime?
+  procedimentoNome String?
+  status           String    @default("agendado") // agendado|confirmado|atendido|faltou|cancelado
+  observacoes      String?
+  criadoEm         DateTime  @default(now())
+}
+
+model Orcamento {
+  id          String   @id @default(cuid())
+  paciente    Paciente @relation(fields: [pacienteId], references: [id])
+  pacienteId  String
+  data        DateTime @default(now())
+  status      String   @default("pendente") // pendente|aprovado|recusado
+  desconto    Float    @default(0)
+  observacoes String?
+  criadoEm    DateTime @default(now())
+
+  itens      OrcamentoItem[]
+  pagamentos Pagamento[]
+}
+
+model OrcamentoItem {
+  id          String    @id @default(cuid())
+  orcamento   Orcamento @relation(fields: [orcamentoId], references: [id], onDelete: Cascade)
+  orcamentoId String
+  descricao   String
+  quantidade  Int       @default(1)
+  valorUnit   Float     @default(0)
+}
+
+model ProcedimentoRealizado {
+  id           String    @id @default(cuid())
+  paciente     Paciente  @relation(fields: [pacienteId], references: [id])
+  pacienteId   String
+  data         DateTime  @default(now())
+  procedimento String
+  produto      String?
+  lote         String?
+  validade     DateTime?
+  quantidade   String? // ex.: "2 ml", "50 UI"
+  regioes      String?
+  observacoes  String?
+  criadoEm     DateTime  @default(now())
+}
+
+model Pagamento {
+  id          String     @id @default(cuid())
+  paciente    Paciente   @relation(fields: [pacienteId], references: [id])
+  pacienteId  String
+  orcamento   Orcamento? @relation(fields: [orcamentoId], references: [id])
+  orcamentoId String?
+  data        DateTime   @default(now())
+  valor       Float
+  forma       String // Pix|Dinheiro|Cartão débito|Cartão crédito|Transferência|Outro
+  referencia  String?
+  criadoEm    DateTime   @default(now())
+}
+
+model Anamnese {
+  id         String   @id @default(cuid())
+  paciente   Paciente @relation(fields: [pacienteId], references: [id])
+  pacienteId String
+  data       DateTime @default(now())
+  respostas  String // JSON serializado com perguntas/respostas
+  criadoEm   DateTime @default(now())
+}
+
+model Consentimento {
+  id           String   @id @default(cuid())
+  paciente     Paciente @relation(fields: [pacienteId], references: [id])
+  pacienteId   String
+  procedimento String
+  data         DateTime @default(now())
+  assinado     Boolean  @default(false)
+  arquivoPath  String?
+  criadoEm     DateTime @default(now())
+}
+
+model Foto {
+  id           String   @id @default(cuid())
+  paciente     Paciente @relation(fields: [pacienteId], references: [id])
+  pacienteId   String
+  tipo         String // antes | depois
+  procedimento String?
+  data         DateTime @default(now())
+  caminho      String // caminho do arquivo no disco
+  criadoEm     DateTime @default(now())
+}
