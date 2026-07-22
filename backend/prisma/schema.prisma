@@ -28,7 +28,10 @@ model Paciente {
   email        String?
   nascimento   DateTime?
   sexo         String?
+  cidade       String?
+  uf           String?
   endereco     String?
+  origem       String? // trafego_pago | organico | indicacao | retorno | outro
   observacoes  String?
   criadoEm     DateTime  @default(now())
   atualizadoEm DateTime  @updatedAt
