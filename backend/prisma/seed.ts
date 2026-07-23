@@ -11,14 +11,15 @@ const prisma = new PrismaClient()
 
 const CUSTO_HASH = 12
 
+/** Catálogo inicial, na ordem de prioridade definida pelo cliente (ver ADENDO-02).
+ * Preço e duração ficam com o valor padrão (0 / 60min) para o Dr. Gustavo preencher. */
 const procedimentosIniciais = [
-  { nome: 'Harmonização facial', categoria: 'facial' },
-  { nome: 'Harmonização íntima masculina', categoria: 'intima_masculina' },
-  { nome: 'Harmonização íntima feminina', categoria: 'intima_feminina' },
-  { nome: 'Harmonização corporal', categoria: 'corporal' },
-  { nome: 'Toxina botulínica', categoria: 'outros' },
-  { nome: 'Preenchimento com ácido hialurônico', categoria: 'outros' },
-  { nome: 'Bioestimulador de colágeno', categoria: 'outros' },
+  { nome: 'Harmonização íntima masculina (preenchimento peniano)', categoria: 'intima_masculina', ordem: 1 },
+  { nome: 'Harmonização íntima feminina', categoria: 'intima_feminina', ordem: 2 },
+  { nome: 'Harmonização corporal', categoria: 'corporal', ordem: 3 },
+  { nome: 'Lipo pubiana masculina', categoria: 'intima_masculina', ordem: 4 },
+  { nome: 'Harmonização facial', categoria: 'facial', ordem: 5 },
+  { nome: 'Lipo pubiana feminina', categoria: 'intima_feminina', ordem: 6 },
 ]
 
 async function main() {
@@ -45,7 +46,12 @@ async function main() {
 
   for (const procedimento of procedimentosIniciais) {
     const existente = await prisma.procedimento.findFirst({ where: { nome: procedimento.nome } })
-    if (!existente) {
+    if (existente) {
+      await prisma.procedimento.update({
+        where: { id: existente.id },
+        data: { categoria: procedimento.categoria, ordem: procedimento.ordem },
+      })
+    } else {
       await prisma.procedimento.create({ data: procedimento })
     }
   }

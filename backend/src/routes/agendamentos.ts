@@ -86,7 +86,12 @@ async function encontrarAgendamentoConflitante(
 
 export async function rotasAgendamentos(app: FastifyInstance) {
   app.get('/api/agendamentos', { preHandler: autenticar }, async (request) => {
-    const { de, ate, localId } = request.query as { de?: string; ate?: string; localId?: string }
+    const { de, ate, localId, pacienteId } = request.query as {
+      de?: string
+      ate?: string
+      localId?: string
+      pacienteId?: string
+    }
 
     const inicio = de ? paraInstanteBrasilia(de, '00:00') : undefined
     const fim = ate ? paraInstanteBrasilia(ate, '23:59') : undefined
@@ -95,6 +100,7 @@ export async function rotasAgendamentos(app: FastifyInstance) {
       where: {
         ...(inicio && fim ? { inicio: { gte: inicio, lte: fim } } : {}),
         ...(localId ? { localId } : {}),
+        ...(pacienteId ? { pacienteId } : {}),
       },
       include: {
         paciente: { select: { id: true, nome: true, telefone: true, origem: true } },

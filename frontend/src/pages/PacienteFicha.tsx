@@ -6,7 +6,6 @@ import {
   Trash2,
   MessageCircle,
   Calendar,
-  Sparkles,
   FileText,
   Wallet,
   ClipboardCheck,
@@ -15,6 +14,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { SecaoProntuario } from '@/components/paciente/SecaoProntuario'
 import {
   buscarPaciente,
   removerPaciente,
@@ -32,11 +32,6 @@ type SecaoFutura = { titulo: string; icone: LucideIcon; texto: string }
 
 const secoesFuturas: SecaoFutura[] = [
   { titulo: 'Atendimentos', icone: Calendar, texto: 'Histórico de agendamentos aparecerá aqui (Fase 3).' },
-  {
-    titulo: 'Procedimentos realizados',
-    icone: Sparkles,
-    texto: 'Registro clínico (produto, lote, validade) chega em fase futura.',
-  },
   { titulo: 'Orçamentos', icone: FileText, texto: 'Orçamentos do paciente aparecerão aqui.' },
   { titulo: 'Pagamentos', icone: Wallet, texto: 'Histórico financeiro aparecerá aqui.' },
   {
@@ -147,6 +142,10 @@ export function PacienteFicha() {
           </CardContent>
         )}
       </Card>
+
+      <div className="mb-6">
+        <SecaoProntuario pacienteId={paciente.id} />
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {secoesFuturas.map((secao) => (

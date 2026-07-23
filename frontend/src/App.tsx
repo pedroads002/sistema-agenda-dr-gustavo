@@ -10,10 +10,11 @@ import { PacienteFicha } from '@/pages/PacienteFicha'
 import { Agenda } from '@/pages/Agenda'
 import { AgendaLocais } from '@/pages/AgendaLocais'
 import { AgendaBloqueios } from '@/pages/AgendaBloqueios'
+import { Procedimentos } from '@/pages/Procedimentos'
 import { EmConstrucao } from '@/pages/EmConstrucao'
 import { itensMenu } from '@/lib/nav'
 
-const CAMINHOS_COM_PAGINA_PROPRIA = ['/', '/pacientes', '/agenda']
+const CAMINHOS_COM_PAGINA_PROPRIA = ['/', '/pacientes', '/agenda', '/procedimentos']
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/agenda/locais" element={<AgendaLocais />} />
           <Route path="/agenda/bloqueios" element={<AgendaBloqueios />} />
+          <Route path="/procedimentos" element={<Procedimentos />} />
           {itensMenu
             .filter((item) => !CAMINHOS_COM_PAGINA_PROPRIA.includes(item.caminho))
             .map((item) => (

@@ -51,6 +51,7 @@ model Procedimento {
   categoria  String // facial | intima_masculina | intima_feminina | corporal | outros
   valorBase  Float    @default(0)
   duracaoMin Int      @default(60)
+  ordem      Int      @default(0) // menor = aparece primeiro (prioridade)
   ativo      Boolean  @default(true)
   criadoEm   DateTime @default(now())
 }
@@ -68,6 +69,8 @@ model Agendamento {
   status           String    @default("a_confirmar") // a_confirmar|confirmado|compareceu|desmarcou|faltou
   observacoes      String?
   criadoEm         DateTime  @default(now())
+
+  procedimentosRealizados ProcedimentoRealizado[]
 }
 
 // Locais/cidades onde o Dr. Gustavo atende
@@ -117,18 +120,28 @@ model OrcamentoItem {
 }
 
 model ProcedimentoRealizado {
-  id           String    @id @default(cuid())
-  paciente     Paciente  @relation(fields: [pacienteId], references: [id])
-  pacienteId   String
-  data         DateTime  @default(now())
-  procedimento String
-  produto      String?
-  lote         String?
-  validade     DateTime?
-  quantidade   String? // ex.: "2 ml", "50 UI"
-  regioes      String?
-  observacoes  String?
-  criadoEm     DateTime  @default(now())
+  id            String       @id @default(cuid())
+  paciente      Paciente     @relation(fields: [pacienteId], references: [id])
+  pacienteId    String
+  agendamento   Agendamento? @relation(fields: [agendamentoId], references: [id])
+  agendamentoId String? // vínculo opcional com o atendimento da agenda
+  data          DateTime     @default(now())
+  procedimento  String // nome (do catálogo)
+  observacoes   String? // anotações clínicas livres / intercorrências
+  criadoEm      DateTime     @default(now())
+
+  produtos ProdutoAplicado[]
+}
+
+model ProdutoAplicado {
+  id                      String                @id @default(cuid())
+  procedimentoRealizado   ProcedimentoRealizado @relation(fields: [procedimentoRealizadoId], references: [id], onDelete: Cascade)
+  procedimentoRealizadoId String
+  produto                 String? // marca / substância
+  lote                    String?
+  validade                DateTime?
+  quantidade              String? // ex.: "2 ml", "50 UI"
+  regiao                  String?
 }
 
 model Pagamento {

@@ -55,6 +55,11 @@ export function listarAgendamentos(de: string, ate: string, localId?: string) {
   return api<{ agendamentos: Agendamento[] }>(`/agendamentos?${query.toString()}`)
 }
 
+export function listarAgendamentosDoPaciente(pacienteId: string) {
+  const query = new URLSearchParams({ pacienteId })
+  return api<{ agendamentos: Agendamento[] }>(`/agendamentos?${query.toString()}`)
+}
+
 export function buscarAgendamento(id: string) {
   return api<{ agendamento: Agendamento }>(`/agendamentos/${id}`)
 }
