@@ -8,6 +8,7 @@ import { rotasBloqueios } from './routes/bloqueios.js'
 import { rotasAgendamentos } from './routes/agendamentos.js'
 import { rotasProcedimentos } from './routes/procedimentos.js'
 import { rotasProntuario } from './routes/prontuario.js'
+import { rotasOrcamentos } from './routes/orcamentos.js'
 
 const app = Fastify({ logger: true })
 
@@ -19,6 +20,7 @@ await app.register(rotasBloqueios)
 await app.register(rotasAgendamentos)
 await app.register(rotasProcedimentos)
 await app.register(rotasProntuario)
+await app.register(rotasOrcamentos)
 
 // Rota simples para confirmar que o servidor está de pé.
 app.get('/api/saude', async () => {

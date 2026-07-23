@@ -6,7 +6,6 @@ import {
   Trash2,
   MessageCircle,
   Calendar,
-  FileText,
   Wallet,
   ClipboardCheck,
   Camera,
@@ -15,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SecaoProntuario } from '@/components/paciente/SecaoProntuario'
+import { SecaoOrcamentos } from '@/components/paciente/SecaoOrcamentos'
 import {
   buscarPaciente,
   removerPaciente,
@@ -32,7 +32,6 @@ type SecaoFutura = { titulo: string; icone: LucideIcon; texto: string }
 
 const secoesFuturas: SecaoFutura[] = [
   { titulo: 'Atendimentos', icone: Calendar, texto: 'Histórico de agendamentos aparecerá aqui (Fase 3).' },
-  { titulo: 'Orçamentos', icone: FileText, texto: 'Orçamentos do paciente aparecerão aqui.' },
   { titulo: 'Pagamentos', icone: Wallet, texto: 'Histórico financeiro aparecerá aqui.' },
   {
     titulo: 'Anamnese e consentimentos',
@@ -143,7 +142,8 @@ export function PacienteFicha() {
         )}
       </Card>
 
-      <div className="mb-6">
+      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+        <SecaoOrcamentos pacienteId={paciente.id} pacienteNome={paciente.nome} />
         <SecaoProntuario pacienteId={paciente.id} />
       </div>
 

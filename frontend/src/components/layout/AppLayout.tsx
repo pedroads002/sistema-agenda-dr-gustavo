@@ -12,7 +12,7 @@ export function AppLayout() {
   return (
     <div className="flex h-svh w-full bg-background text-foreground">
       {/* Menu lateral fixo — telas grandes */}
-      <Sidebar className="hidden md:flex" />
+      <Sidebar className="no-print hidden md:flex" />
 
       {/* Menu lateral recolhível — mobile */}
       <Sheet open={menuAberto} onOpenChange={setMenuAberto}>
@@ -24,7 +24,7 @@ export function AppLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Barra superior — só aparece no mobile, para abrir o menu */}
-        <header className="flex items-center gap-3 border-b border-border bg-card px-4 py-3 md:hidden">
+        <header className="no-print flex items-center gap-3 border-b border-border bg-card px-4 py-3 md:hidden">
           <Button
             variant="ghost"
             size="icon-sm"

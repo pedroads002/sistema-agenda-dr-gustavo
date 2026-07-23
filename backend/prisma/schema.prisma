@@ -97,14 +97,15 @@ model Bloqueio {
 }
 
 model Orcamento {
-  id          String   @id @default(cuid())
-  paciente    Paciente @relation(fields: [pacienteId], references: [id])
+  id          String    @id @default(cuid())
+  paciente    Paciente  @relation(fields: [pacienteId], references: [id])
   pacienteId  String
-  data        DateTime @default(now())
-  status      String   @default("pendente") // pendente|aprovado|recusado
-  desconto    Float    @default(0)
+  data        DateTime  @default(now())
+  validoAte   DateTime? // validade do orçamento (opcional)
+  status      String    @default("pendente") // pendente|aprovado|recusado
+  desconto    Float     @default(0)
   observacoes String?
-  criadoEm    DateTime @default(now())
+  criadoEm    DateTime  @default(now())
 
   itens      OrcamentoItem[]
   pagamentos Pagamento[]

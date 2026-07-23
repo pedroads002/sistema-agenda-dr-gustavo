@@ -132,3 +132,21 @@
     @apply font-sans;
     }
 }
+
+/* Impressão de orçamentos (Fase 5): esconde o menu/botões e deixa só o conteúdo do documento. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  html, body, #root {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+  .print-area {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+}
