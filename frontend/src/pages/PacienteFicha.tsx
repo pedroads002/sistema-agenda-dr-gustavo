@@ -6,7 +6,6 @@ import {
   Trash2,
   MessageCircle,
   Calendar,
-  Wallet,
   ClipboardCheck,
   Camera,
   type LucideIcon,
@@ -15,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SecaoProntuario } from '@/components/paciente/SecaoProntuario'
 import { SecaoOrcamentos } from '@/components/paciente/SecaoOrcamentos'
+import { SecaoPagamentos } from '@/components/paciente/SecaoPagamentos'
 import {
   buscarPaciente,
   removerPaciente,
@@ -32,7 +32,6 @@ type SecaoFutura = { titulo: string; icone: LucideIcon; texto: string }
 
 const secoesFuturas: SecaoFutura[] = [
   { titulo: 'Atendimentos', icone: Calendar, texto: 'Histórico de agendamentos aparecerá aqui (Fase 3).' },
-  { titulo: 'Pagamentos', icone: Wallet, texto: 'Histórico financeiro aparecerá aqui.' },
   {
     titulo: 'Anamnese e consentimentos',
     icone: ClipboardCheck,
@@ -144,6 +143,10 @@ export function PacienteFicha() {
 
       <div className="mb-6 grid gap-4 lg:grid-cols-2">
         <SecaoOrcamentos pacienteId={paciente.id} pacienteNome={paciente.nome} />
+        <SecaoPagamentos pacienteId={paciente.id} pacienteNome={paciente.nome} />
+      </div>
+
+      <div className="mb-6">
         <SecaoProntuario pacienteId={paciente.id} />
       </div>
 

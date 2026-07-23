@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Pencil, Printer, MessageCircle } from 'lucide-react'
+import { ArrowLeft, Pencil, Printer, MessageCircle, HandCoins } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
@@ -10,6 +10,7 @@ import { cn, formatarMoeda } from '@/lib/utils'
 import { listarProcedimentos } from '@/lib/procedimentos'
 import { formatarTelefone } from '@/lib/pacientes'
 import { FormularioOrcamento } from '@/components/orcamento/FormularioOrcamento'
+import { FormularioPagamento } from '@/components/pagamento/FormularioPagamento'
 import {
   buscarOrcamento,
   calcularTotais,
@@ -25,6 +26,7 @@ export function OrcamentoVisualizar() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [editando, setEditando] = useState(false)
+  const [recebendo, setRecebendo] = useState(false)
 
   const { data, isLoading } = useQuery({
     queryKey: ['orcamento', id],
@@ -57,6 +59,13 @@ export function OrcamentoVisualizar() {
     setEditando(false)
   }
 
+  function aoRegistrarPagamento() {
+    queryClient.invalidateQueries({ queryKey: ['orcamento', id] })
+    queryClient.invalidateQueries({ queryKey: ['orcamentos'] })
+    queryClient.invalidateQueries({ queryKey: ['pagamentos'] })
+    setRecebendo(false)
+  }
+
   return (
     <div className="p-6 sm:p-8">
       <div className="no-print mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -77,6 +86,12 @@ export function OrcamentoVisualizar() {
             <Pencil className="size-4" />
             Editar
           </Button>
+          {orcamento.status === 'aprovado' && saldo > 0 && (
+            <Button variant="secondary" onClick={() => setRecebendo(true)}>
+              <HandCoins className="size-4" />
+              Receber
+            </Button>
+          )}
           <Button onClick={() => window.print()}>
             <Printer className="size-4" />
             Imprimir / Salvar PDF
@@ -188,6 +203,16 @@ export function OrcamentoVisualizar() {
         procedimentos={procedimentos}
         onOpenChange={setEditando}
         onSalvo={aoSalvarEdicao}
+      />
+
+      <FormularioPagamento
+        aberto={recebendo}
+        pagamento={null}
+        pacienteFixo={{ id: orcamento.paciente.id, nome: orcamento.paciente.nome, telefone: orcamento.paciente.telefone, origem: null }}
+        orcamentoFixoId={orcamento.id}
+        valorInicial={saldo}
+        onOpenChange={setRecebendo}
+        onSalvo={aoRegistrarPagamento}
       />
 
       <p className="no-print mt-4 text-center text-xs text-muted-foreground">
