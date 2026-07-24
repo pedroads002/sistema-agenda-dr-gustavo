@@ -1,20 +1,14 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  ArrowLeft,
-  Pencil,
-  Trash2,
-  MessageCircle,
-  Calendar,
-  ClipboardCheck,
-  Camera,
-  type LucideIcon,
-} from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, MessageCircle, Calendar, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SecaoProntuario } from '@/components/paciente/SecaoProntuario'
 import { SecaoOrcamentos } from '@/components/paciente/SecaoOrcamentos'
 import { SecaoPagamentos } from '@/components/paciente/SecaoPagamentos'
+import { SecaoAnamnese } from '@/components/paciente/SecaoAnamnese'
+import { SecaoConsentimentos } from '@/components/paciente/SecaoConsentimentos'
+import { SecaoFotos } from '@/components/paciente/SecaoFotos'
 import {
   buscarPaciente,
   removerPaciente,
@@ -32,12 +26,6 @@ type SecaoFutura = { titulo: string; icone: LucideIcon; texto: string }
 
 const secoesFuturas: SecaoFutura[] = [
   { titulo: 'Atendimentos', icone: Calendar, texto: 'Histórico de agendamentos aparecerá aqui (Fase 3).' },
-  {
-    titulo: 'Anamnese e consentimentos',
-    icone: ClipboardCheck,
-    texto: 'Formulários de anamnese e termos assinados aparecerão aqui.',
-  },
-  { titulo: 'Fotos', icone: Camera, texto: 'Fotos antes/depois aparecerão aqui.' },
 ]
 
 export function PacienteFicha() {
@@ -148,6 +136,15 @@ export function PacienteFicha() {
 
       <div className="mb-6">
         <SecaoProntuario pacienteId={paciente.id} />
+      </div>
+
+      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+        <SecaoAnamnese pacienteId={paciente.id} />
+        <SecaoConsentimentos pacienteId={paciente.id} />
+      </div>
+
+      <div className="mb-6">
+        <SecaoFotos pacienteId={paciente.id} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

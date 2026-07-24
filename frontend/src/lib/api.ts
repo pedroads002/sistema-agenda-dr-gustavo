@@ -29,7 +29,7 @@ export async function api<T>(caminho: string, opcoes: RequestInit = {}): Promise
   const resposta = await fetch(`${BASE}${caminho}`, {
     ...opcoes,
     headers: {
-      ...(opcoes.body ? { 'Content-Type': 'application/json' } : {}),
+      ...(opcoes.body && !(opcoes.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
       ...opcoes.headers,
     },
     credentials: 'same-origin',

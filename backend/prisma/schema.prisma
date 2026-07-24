@@ -132,6 +132,7 @@ model ProcedimentoRealizado {
   criadoEm      DateTime     @default(now())
 
   produtos ProdutoAplicado[]
+  fotos    Foto[]
 }
 
 model ProdutoAplicado {
@@ -174,17 +175,21 @@ model Consentimento {
   procedimento String
   data         DateTime @default(now())
   assinado     Boolean  @default(false)
-  arquivoPath  String?
+  arquivoPath  String? // nome aleatório do arquivo em backend/src/uploads/ — nunca exposto à API
+  mimeType     String?
   criadoEm     DateTime @default(now())
 }
 
 model Foto {
-  id           String   @id @default(cuid())
-  paciente     Paciente @relation(fields: [pacienteId], references: [id])
-  pacienteId   String
-  tipo         String // antes | depois
-  procedimento String?
-  data         DateTime @default(now())
-  caminho      String // caminho do arquivo no disco
-  criadoEm     DateTime @default(now())
+  id                      String                 @id @default(cuid())
+  paciente                Paciente               @relation(fields: [pacienteId], references: [id])
+  pacienteId              String
+  procedimentoRealizado   ProcedimentoRealizado? @relation(fields: [procedimentoRealizadoId], references: [id])
+  procedimentoRealizadoId String?
+  tipo                    String // antes | depois
+  descricao               String?
+  data                    DateTime               @default(now())
+  caminho                 String // nome aleatório do arquivo em backend/src/uploads/ — nunca exposto à API
+  mimeType                String
+  criadoEm                DateTime               @default(now())
 }
