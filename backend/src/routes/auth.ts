@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma.js'
+import { env } from '../lib/env.js'
 import { conferirSenha, gerarHash } from '../auth/senha.js'
 import { assinarToken } from '../auth/jwt.js'
 import { autenticar, NOME_COOKIE } from '../auth/middleware.js'
@@ -43,10 +44,10 @@ export async function rotasAuth(app: FastifyInstance) {
     reply.setCookie(NOME_COOKIE, token, {
       httpOnly: true,
       sameSite: 'lax',
-      // O sistema roda só na rede local, sem HTTPS (por desenho). Um cookie "secure"
-      // exige HTTPS para ser salvo/enviado — em "secure: true" o login pararia de
-      // funcionar ao acessar pelo IP da máquina (ex.: no celular).
-      secure: false,
+      // Um cookie "secure" exige HTTPS para ser salvo/enviado. Localmente (sem HTTPS) isso
+      // quebraria o login pelo IP da máquina; em produção com HTTPS (ex.: Railway) deve ficar
+      // ligado. Controlado pela variável COOKIE_SECURE (ver backend/.env.example).
+      secure: env.cookieSecure,
       path: '/',
       maxAge: SETE_DIAS_EM_SEGUNDOS,
     })

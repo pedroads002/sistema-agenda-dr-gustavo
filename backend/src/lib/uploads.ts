@@ -4,10 +4,14 @@ import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
-// backend/uploads — fora do Git (.gitignore), servido só por rota autenticada.
-// Caminho fixo relativo à raiz do backend (não ao arquivo compilado), para funcionar
-// igual em desenvolvimento (tsx roda src/) e em produção (node roda dist/).
-export const UPLOADS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'uploads')
+// Fora do Git (.gitignore), servido só por rota autenticada.
+// Local: backend/uploads (relativo à raiz do backend, não ao arquivo compilado — funciona
+// igual em desenvolvimento e em produção). Em produção com armazenamento persistente (ex.:
+// volume do Railway), a variável UPLOADS_DIR aponta para dentro do volume montado, já que o
+// resto do sistema de arquivos do container não sobrevive a um novo deploy.
+export const UPLOADS_DIR = process.env.UPLOADS_DIR
+  ? path.resolve(process.env.UPLOADS_DIR)
+  : path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'uploads')
 
 const EXTENSAO_POR_MIME: Record<string, string> = {
   'image/jpeg': '.jpg',

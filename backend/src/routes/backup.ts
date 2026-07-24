@@ -8,7 +8,17 @@ import { UPLOADS_DIR } from '../lib/uploads.js'
 
 // backend/src/routes/backup.ts -> backend/src -> backend
 const DIR_BACKEND = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
-const DB_PATH = path.join(DIR_BACKEND, 'data', 'consultorio.db')
+
+// Lê o caminho real do banco a partir de DATABASE_URL (a mesma variável que o Prisma usa),
+// em vez de um caminho fixo — assim funciona tanto localmente (caminho relativo, resolvido
+// a partir de backend/prisma/, igual o Prisma faz) quanto em produção (caminho absoluto
+// dentro de um volume persistente, ex.: "file:/data/consultorio.db" no Railway).
+function resolverCaminhoBanco(): string {
+  const bruto = (process.env.DATABASE_URL ?? '').replace(/^file:/, '')
+  return path.isAbsolute(bruto) ? bruto : path.join(DIR_BACKEND, 'prisma', bruto)
+}
+
+const DB_PATH = resolverCaminhoBanco()
 
 export async function rotasBackup(app: FastifyInstance) {
   app.get('/api/backup/exportar', { preHandler: autenticar }, async (request, reply) => {

@@ -75,6 +75,11 @@ com o banco de dados e todas as fotos/anexos enviados até aquele momento.
 4. Substitua a pasta `backend/uploads` pela pasta `uploads` extraída.
 5. Ligue o sistema novamente (`Iniciar Sistema.command`).
 
+## Deploy em produção (Railway)
+
+Para colocar o sistema no ar num servidor acessível de qualquer lugar (não só na rede do
+consultório), veja o passo a passo em `docs/DEPLOY-RAILWAY.md`.
+
 ## Stack técnica
 
 React + Vite + TypeScript + Tailwind + shadcn/ui no frontend; Node.js + Fastify + Prisma +
