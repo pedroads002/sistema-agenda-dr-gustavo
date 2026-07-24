@@ -9,6 +9,7 @@ import { Logo } from '@/components/brand/Logo'
 import { cn, formatarMoeda } from '@/lib/utils'
 import { listarProcedimentos } from '@/lib/procedimentos'
 import { formatarTelefone } from '@/lib/pacientes'
+import { buscarConfiguracoes } from '@/lib/configuracoes'
 import { FormularioOrcamento } from '@/components/orcamento/FormularioOrcamento'
 import { FormularioPagamento } from '@/components/pagamento/FormularioPagamento'
 import {
@@ -36,8 +37,13 @@ export function OrcamentoVisualizar() {
     queryKey: ['procedimentos'],
     queryFn: () => listarProcedimentos(),
   })
+  const { data: dadosConfiguracao } = useQuery({
+    queryKey: ['configuracoes'],
+    queryFn: buscarConfiguracoes,
+  })
 
   const procedimentos = dadosProcedimentos?.procedimentos ?? []
+  const configuracao = dadosConfiguracao?.configuracao
 
   if (isLoading) {
     return <div className="p-8 text-sm text-muted-foreground">Carregando...</div>
@@ -104,8 +110,18 @@ export function OrcamentoVisualizar() {
           <div className="flex items-center gap-3">
             <Logo size={48} />
             <div>
-              <p className="text-base font-semibold text-foreground">Dr. Gustavo Amaral</p>
-              <p className="text-sm text-muted-foreground">Harmonização Estética</p>
+              <p className="text-base font-semibold text-foreground">
+                {configuracao?.nomeConsultorio ?? 'Dr. Gustavo Amaral'}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {configuracao?.nomeProfissional ?? 'Harmonização Estética'}
+                {configuracao?.registroProfissional ? ` · ${configuracao.registroProfissional}` : ''}
+              </p>
+              {(configuracao?.telefone || configuracao?.endereco) && (
+                <p className="text-xs text-muted-foreground">
+                  {[configuracao?.telefone, configuracao?.endereco].filter(Boolean).join(' · ')}
+                </p>
+              )}
             </div>
           </div>
           <div className="text-right">

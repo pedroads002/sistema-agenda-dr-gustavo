@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
 // backend/src/uploads — fora do Git (.gitignore), servido só por rota autenticada.
-const UPLOADS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'uploads')
+export const UPLOADS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'uploads')
 
 const EXTENSAO_POR_MIME: Record<string, string> = {
   'image/jpeg': '.jpg',

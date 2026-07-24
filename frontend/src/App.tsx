@@ -14,10 +14,19 @@ import { Procedimentos } from '@/pages/Procedimentos'
 import { Orcamentos } from '@/pages/Orcamentos'
 import { OrcamentoVisualizar } from '@/pages/OrcamentoVisualizar'
 import { Financeiro } from '@/pages/Financeiro'
+import { Configuracoes } from '@/pages/Configuracoes'
 import { EmConstrucao } from '@/pages/EmConstrucao'
 import { itensMenu } from '@/lib/nav'
 
-const CAMINHOS_COM_PAGINA_PROPRIA = ['/', '/pacientes', '/agenda', '/procedimentos', '/orcamentos', '/financeiro']
+const CAMINHOS_COM_PAGINA_PROPRIA = [
+  '/',
+  '/pacientes',
+  '/agenda',
+  '/procedimentos',
+  '/orcamentos',
+  '/financeiro',
+  '/configuracoes',
+]
 
 function App() {
   return (
@@ -39,6 +48,7 @@ function App() {
           <Route path="/orcamentos" element={<Orcamentos />} />
           <Route path="/orcamentos/:id" element={<OrcamentoVisualizar />} />
           <Route path="/financeiro" element={<Financeiro />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
           {itensMenu
             .filter((item) => !CAMINHOS_COM_PAGINA_PROPRIA.includes(item.caminho))
             .map((item) => (

@@ -180,6 +180,21 @@ model Consentimento {
   criadoEm     DateTime @default(now())
 }
 
+// Configuração única do consultório (linha singleton, id fixo) — usada nos
+// cabeçalhos de orçamento/PDF (ver seção 5.11 da documentação).
+model Configuracao {
+  id                   String   @id
+  nomeConsultorio      String
+  nomeProfissional     String
+  registroProfissional String? // CRM ou outro registro profissional
+  telefone             String?
+  email                String?
+  endereco             String?
+  cidade               String?
+  uf                   String?
+  atualizadoEm         DateTime @updatedAt
+}
+
 model Foto {
   id                      String                 @id @default(cuid())
   paciente                Paciente               @relation(fields: [pacienteId], references: [id])

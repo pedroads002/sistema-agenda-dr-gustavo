@@ -6,8 +6,6 @@ import {
   Stethoscope,
   FileText,
   Wallet,
-  ClipboardCheck,
-  Camera,
   Settings,
   type LucideIcon,
 } from 'lucide-react'
@@ -26,7 +24,5 @@ export const itensMenu: ItemMenu[] = [
   { rotulo: 'Prontuário', caminho: '/prontuario', icone: Stethoscope },
   { rotulo: 'Orçamentos', caminho: '/orcamentos', icone: FileText },
   { rotulo: 'Financeiro', caminho: '/financeiro', icone: Wallet },
-  { rotulo: 'Anamnese e Consentimento', caminho: '/anamnese', icone: ClipboardCheck },
-  { rotulo: 'Fotos', caminho: '/fotos', icone: Camera },
   { rotulo: 'Configurações', caminho: '/configuracoes', icone: Settings },
 ]

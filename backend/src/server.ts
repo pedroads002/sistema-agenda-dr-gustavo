@@ -15,6 +15,9 @@ import { rotasPagamentos } from './routes/pagamentos.js'
 import { rotasAnamnese } from './routes/anamnese.js'
 import { rotasConsentimentos } from './routes/consentimentos.js'
 import { rotasFotos } from './routes/fotos.js'
+import { rotasConfiguracoes } from './routes/configuracoes.js'
+import { rotasPainel } from './routes/painel.js'
+import { rotasBackup } from './routes/backup.js'
 
 const app = Fastify({ logger: true })
 
@@ -35,6 +38,9 @@ await app.register(rotasPagamentos)
 await app.register(rotasAnamnese)
 await app.register(rotasConsentimentos)
 await app.register(rotasFotos)
+await app.register(rotasConfiguracoes)
+await app.register(rotasPainel)
+await app.register(rotasBackup)
 
 // Rota simples para confirmar que o servidor está de pé.
 app.get('/api/saude', async () => {

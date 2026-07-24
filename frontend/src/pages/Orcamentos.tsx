@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FileText, Plus, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -21,9 +21,18 @@ const FILTROS = ['todos', 'pendente', 'aprovado', 'recusado'] as const
 
 export function Orcamentos() {
   const queryClient = useQueryClient()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [filtro, setFiltro] = useState<(typeof FILTROS)[number]>('todos')
   const [editando, setEditando] = useState<Orcamento | null>(null)
   const [criando, setCriando] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('novo') === '1') {
+      setCriando(true)
+      setSearchParams({}, { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const { data, isLoading } = useQuery({
     queryKey: ['orcamentos', filtro],

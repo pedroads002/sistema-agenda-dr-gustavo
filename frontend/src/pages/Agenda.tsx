@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarOff, ChevronLeft, ChevronRight, Lock, MapPin, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -56,6 +56,7 @@ function tituloPeriodo(visao: Visao, dataReferencia: string): string {
 
 export function Agenda() {
   const queryClient = useQueryClient()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [visao, setVisao] = useState<Visao>('semana')
   const [dataReferencia, setDataReferencia] = useState(hojeBrasilia())
   const [localFiltro, setLocalFiltro] = useState('')
@@ -79,6 +80,14 @@ export function Agenda() {
 
   const locais = dadosLocais?.locais ?? []
   const procedimentos = dadosProcedimentos?.procedimentos ?? []
+
+  useEffect(() => {
+    if (searchParams.get('novo') === '1') {
+      abrirNovo()
+      setSearchParams({}, { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const agendamentosPorDia = useMemo(() => {
     const mapa = new Map<string, Agendamento[]>()
