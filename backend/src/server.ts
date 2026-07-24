@@ -1,6 +1,10 @@
 import Fastify, { type FastifyError } from 'fastify'
 import cookie from '@fastify/cookie'
 import multipart from '@fastify/multipart'
+import staticPlugin from '@fastify/static'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { existsSync } from 'node:fs'
 import { env } from './lib/env.js'
 import { TAMANHO_MAXIMO_BYTES } from './lib/uploads.js'
 import { rotasAuth } from './routes/auth.js'
@@ -46,6 +50,27 @@ await app.register(rotasBackup)
 app.get('/api/saude', async () => {
   return { status: 'ok' }
 })
+
+// Serve o build de produção do frontend (frontend/dist), na mesma porta da API.
+// Em desenvolvimento essa pasta não existe (o Vite roda separado), então o servidor
+// segue funcionando normalmente só com a API.
+const DIR_ATUAL = path.dirname(fileURLToPath(import.meta.url))
+const FRONTEND_DIST = path.join(DIR_ATUAL, '..', '..', 'frontend', 'dist')
+
+if (existsSync(FRONTEND_DIST)) {
+  await app.register(staticPlugin, {
+    root: FRONTEND_DIST,
+    wildcard: false,
+  })
+
+  app.setNotFoundHandler((request, reply) => {
+    if (request.url.startsWith('/api/')) {
+      return reply.status(404).send({ erro: 'Rota não encontrada' })
+    }
+    // Qualquer outra rota é uma tela do React (React Router cuida da navegação no navegador).
+    return reply.sendFile('index.html', FRONTEND_DIST)
+  })
+}
 
 app.setErrorHandler((erro: FastifyError, request, reply) => {
   if (erro.code === 'FST_REQ_FILE_TOO_LARGE') {

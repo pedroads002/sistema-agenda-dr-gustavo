@@ -31,7 +31,8 @@ const schema = z.object({
     .pipe(z.string().length(2, 'UF deve ter 2 letras').optional()),
 })
 
-type FormConfiguracao = z.infer<typeof schema>
+type FormEntrada = z.input<typeof schema>
+type FormSaida = z.output<typeof schema>
 
 export function Configuracoes() {
   const queryClient = useQueryClient()
@@ -47,7 +48,7 @@ export function Configuracoes() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormConfiguracao>({
+  } = useForm<FormEntrada, unknown, FormSaida>({
     resolver: zodResolver(schema),
     values: configuracao
       ? {
@@ -63,7 +64,7 @@ export function Configuracoes() {
       : undefined,
   })
 
-  async function aoEnviar(dados: FormConfiguracao) {
+  async function aoEnviar(dados: FormSaida) {
     setMensagem(null)
     try {
       const payload: DadosConfiguracao = dados
@@ -220,7 +221,7 @@ export function Configuracoes() {
                 <code className="text-foreground">consultorio.db</code> do backup.
               </li>
               <li>
-                Substitua a pasta <code className="text-foreground">backend/src/uploads</code> pela pasta{' '}
+                Substitua a pasta <code className="text-foreground">backend/uploads</code> pela pasta{' '}
                 <code className="text-foreground">uploads</code> do backup.
               </li>
               <li>Inicie o sistema novamente.</li>

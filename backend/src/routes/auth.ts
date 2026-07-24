@@ -43,7 +43,10 @@ export async function rotasAuth(app: FastifyInstance) {
     reply.setCookie(NOME_COOKIE, token, {
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      // O sistema roda só na rede local, sem HTTPS (por desenho). Um cookie "secure"
+      // exige HTTPS para ser salvo/enviado — em "secure: true" o login pararia de
+      // funcionar ao acessar pelo IP da máquina (ex.: no celular).
+      secure: false,
       path: '/',
       maxAge: SETE_DIAS_EM_SEGUNDOS,
     })

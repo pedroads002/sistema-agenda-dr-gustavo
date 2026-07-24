@@ -4,8 +4,10 @@ import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
-// backend/src/uploads — fora do Git (.gitignore), servido só por rota autenticada.
-export const UPLOADS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'uploads')
+// backend/uploads — fora do Git (.gitignore), servido só por rota autenticada.
+// Caminho fixo relativo à raiz do backend (não ao arquivo compilado), para funcionar
+// igual em desenvolvimento (tsx roda src/) e em produção (node roda dist/).
+export const UPLOADS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'uploads')
 
 const EXTENSAO_POR_MIME: Record<string, string> = {
   'image/jpeg': '.jpg',
