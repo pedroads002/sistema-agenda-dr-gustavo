@@ -10,7 +10,7 @@
 
 cd "$(dirname "$0")" || exit 1
 
-PORTA=3333
+PORTA=3000
 ENDERECO="http://localhost:$PORTA"
 
 echo "======================================================"

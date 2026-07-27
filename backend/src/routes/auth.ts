@@ -45,8 +45,9 @@ export async function rotasAuth(app: FastifyInstance) {
       httpOnly: true,
       sameSite: 'lax',
       // Um cookie "secure" exige HTTPS para ser salvo/enviado. Localmente (sem HTTPS) isso
-      // quebraria o login pelo IP da máquina; em produção com HTTPS (ex.: Railway) deve ficar
-      // ligado. Controlado pela variável COOKIE_SECURE (ver backend/.env.example).
+      // quebraria o login pelo IP da máquina; se o acesso externo (ex.: Cloudflare Tunnel)
+      // sempre passar por HTTPS até o navegador, pode ligar via COOKIE_SECURE (ver
+      // backend/.env.example).
       secure: env.cookieSecure,
       path: '/',
       maxAge: SETE_DIAS_EM_SEGUNDOS,

@@ -10,7 +10,7 @@ está em `docs/DOCUMENTACAO-SISTEMA-DR-GUSTAVO.md`.
 
 1. Dê **duplo-clique** no arquivo **`Iniciar Sistema.command`**, na pasta do sistema.
 2. Uma janela do Terminal abre sozinha e, em poucos segundos, o navegador abre em
-   `http://localhost:3333` já com o sistema.
+   `http://localhost:3000` já com o sistema.
 3. Faça login com seu e-mail e senha.
 4. Para **desligar** o sistema: feche a janela do Terminal que abriu (ou clique nela e
    pressione `Ctrl+C`). Fechar só a aba do navegador não desliga o sistema.
@@ -24,18 +24,15 @@ Pré-requisitos: Node.js 22 ou mais novo instalado no Mac (`node -v` no Terminal
 
 1. Copie a pasta do sistema para o computador do consultório.
 2. Dentro da pasta `backend/`, crie o arquivo `.env` a partir do `backend/.env.example`,
-   preenchendo:
-   - `JWT_SECRET`: uma frase longa e aleatória (segredo interno do sistema).
-   - `SEED_ADMIN_EMAIL` / `SEED_ADMIN_SENHA`: e-mail e senha do primeiro acesso.
+   preenchendo pelo menos o `JWT_SECRET` (uma frase longa e aleatória — segredo interno do
+   sistema). O e-mail e a senha do administrador podem ficar em branco: o próximo passo
+   pergunta os dois no Terminal.
 3. No Terminal, dentro da pasta do sistema, rode uma vez:
    ```
-   npm install
-   npm run build
-   cd backend && npx prisma db seed && cd ..
+   npm run setup
    ```
-   (Os passos de instalar e preparar também acontecem sozinhos, automaticamente, na primeira
-   vez que o `Iniciar Sistema.command` é executado — só a criação do usuário administrador
-   precisa desse comando manual, uma única vez.)
+   Esse comando instala tudo, prepara o banco de dados e pergunta o e-mail e a senha do
+   administrador (a senha não fica visível ao digitar).
 4. Depois disso, o uso do dia a dia é só o item acima: duplo-clique em
    `Iniciar Sistema.command`.
 
@@ -46,8 +43,8 @@ conectados na mesma rede Wi-Fi** do computador do consultório.
 
 1. Com o sistema ligado, descubra o IP local do Mac: Menu Apple → Ajustes do Sistema → Wi-Fi
    → Detalhes (ou, no Terminal: `ipconfig getifaddr en0`). Algo como `192.168.100.5`.
-2. No celular (na mesma Wi-Fi), abra o navegador em `http://SEU-IP:3333` (ex.:
-   `http://192.168.100.5:3333`).
+2. No celular (na mesma Wi-Fi), abra o navegador em `http://SEU-IP:3000` (ex.:
+   `http://192.168.100.5:3000`).
 3. O login continua sendo exigido normalmente.
 
 **Importante:**
@@ -75,16 +72,23 @@ com o banco de dados e todas as fotos/anexos enviados até aquele momento.
 4. Substitua a pasta `backend/uploads` pela pasta `uploads` extraída.
 5. Ligue o sistema novamente (`Iniciar Sistema.command`).
 
-## Deploy em produção (Railway)
+## Publicar na internet (Cloudflare Tunnel)
 
-Para colocar o sistema no ar num servidor acessível de qualquer lugar (não só na rede do
-consultório), veja o passo a passo em `docs/DEPLOY-RAILWAY.md`.
+O sistema roda inteiramente local (SQLite + fotos em pasta local, sem nenhum serviço pago na
+nuvem). Para acessá-lo de fora da rede do consultório, a forma recomendada é um túnel do
+Cloudflare (`cloudflared`) apontando para `http://localhost:3000` — ele fica fora do escopo
+deste projeto (é configurado direto no Cloudflare/terminal, não pelo sistema), mas não exige
+nenhuma mudança de código: o sistema já roda numa porta fixa, pronto para ser apontado.
+
+Se o túnel entregar HTTPS de ponta a ponta até o navegador, pode opcionalmente definir
+`COOKIE_SECURE=true` no `backend/.env` para reforçar a segurança do cookie de login (veja
+`backend/.env.example`).
 
 ## Stack técnica
 
 React + Vite + TypeScript + Tailwind + shadcn/ui no frontend; Node.js + Fastify + Prisma +
 SQLite no backend. Em produção, o backend também serve o frontend já compilado — tudo roda
-numa porta só (`http://localhost:3333`). Sem serviços externos pagos. Mais detalhes em
+numa porta só (`http://localhost:3000`). Sem serviços externos pagos. Mais detalhes em
 `docs/DOCUMENTACAO-SISTEMA-DR-GUSTAVO.md`.
 
 ## Desenvolvimento
@@ -96,4 +100,4 @@ npm install
 npm run dev
 ```
 
-Frontend em `http://localhost:5173` (proxy para a API em `http://localhost:3333`).
+Frontend em `http://localhost:5173` (proxy para a API em `http://localhost:3000`).

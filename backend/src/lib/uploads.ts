@@ -5,10 +5,9 @@ import { randomUUID } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
 // Fora do Git (.gitignore), servido só por rota autenticada.
-// Local: backend/uploads (relativo à raiz do backend, não ao arquivo compilado — funciona
-// igual em desenvolvimento e em produção). Em produção com armazenamento persistente (ex.:
-// volume do Railway), a variável UPLOADS_DIR aponta para dentro do volume montado, já que o
-// resto do sistema de arquivos do container não sobrevive a um novo deploy.
+// Local padrão: backend/uploads (relativo à raiz do backend, não ao arquivo compilado —
+// funciona igual em desenvolvimento e em produção). A variável UPLOADS_DIR permite apontar
+// para outra pasta, se um dia for necessário.
 export const UPLOADS_DIR = process.env.UPLOADS_DIR
   ? path.resolve(process.env.UPLOADS_DIR)
   : path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'uploads')

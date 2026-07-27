@@ -12,7 +12,8 @@
   "scripts": {
     "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev -w backend\" \"npm run dev -w frontend\"",
     "build": "npm run build -w frontend && npm run build -w backend",
-    "start": "npm run start -w backend"
+    "start": "npm run start -w backend",
+    "setup": "npm install && npm run build && npm run setup -w backend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

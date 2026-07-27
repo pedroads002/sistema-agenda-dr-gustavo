@@ -14,10 +14,11 @@ function obrigatoria(nome: string): string {
 
 export const env = {
   jwtSecret: obrigatoria('JWT_SECRET'),
-  // PORT é a variável padrão que serviços como o Railway definem sozinhos; PORTA é a
-  // convenção usada localmente (backend/.env). PORT tem prioridade quando existir.
-  porta: Number(process.env.PORT) || Number(process.env.PORTA) || 3333,
-  // Em produção com HTTPS (ex.: Railway), o cookie de sessão deve exigir conexão segura.
-  // Localmente, o sistema roda sem HTTPS por desenho, então o padrão é não exigir.
+  // PORTA é a convenção usada neste projeto (backend/.env); PORT é aceito como alternativa
+  // caso o sistema um dia rode atrás de outro serviço que defina essa variável sozinho.
+  porta: Number(process.env.PORT) || Number(process.env.PORTA) || 3000,
+  // Cookie "secure" exige HTTPS. Localmente (ou atrás do Cloudflare Tunnel sem HTTPS na
+  // ponta local) o padrão é não exigir; ligue com COOKIE_SECURE=true só se o acesso externo
+  // sempre passar por HTTPS de ponta a ponta.
   cookieSecure: process.env.COOKIE_SECURE === 'true',
 }
