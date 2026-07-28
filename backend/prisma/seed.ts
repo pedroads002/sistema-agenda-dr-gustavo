@@ -74,6 +74,15 @@ async function main() {
   let senhaAdmin = process.env.SEED_ADMIN_SENHA
 
   if (!emailAdmin || !senhaAdmin) {
+    // Sem terminal interativo (ex.: deploy automático na Railway) não tem como perguntar —
+    // falha com uma mensagem clara em vez de ficar travado esperando uma digitação que nunca
+    // vai chegar. Nesse caso, SEED_ADMIN_EMAIL e SEED_ADMIN_SENHA precisam estar configuradas
+    // como variáveis de ambiente do serviço.
+    if (!stdin.isTTY) {
+      throw new Error(
+        'SEED_ADMIN_EMAIL e SEED_ADMIN_SENHA não estão definidas. Configure essas variáveis de ambiente antes do deploy.',
+      )
+    }
     const resposta = await perguntarCredenciais()
     emailAdmin = resposta.email
     senhaAdmin = resposta.senha

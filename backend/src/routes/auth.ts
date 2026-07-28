@@ -44,11 +44,13 @@ export async function rotasAuth(app: FastifyInstance) {
     reply.setCookie(NOME_COOKIE, token, {
       httpOnly: true,
       sameSite: 'lax',
-      // Um cookie "secure" exige HTTPS para ser salvo/enviado. Localmente (sem HTTPS) isso
-      // quebraria o login pelo IP da máquina; se o acesso externo (ex.: Cloudflare Tunnel)
-      // sempre passar por HTTPS até o navegador, pode ligar via COOKIE_SECURE (ver
-      // backend/.env.example).
-      secure: env.cookieSecure,
+      // Um cookie "secure" só é aceito pelo navegador em conexões HTTPS. Como o mesmo servidor
+      // atende tanto o acesso local (http://localhost ou pelo IP da rede, sem HTTPS) quanto o
+      // acesso pela internet via Cloudflare Tunnel (https://..., mas chega no servidor como
+      // HTTP comum vindo do túnel), a decisão é por requisição: request.protocol usa o
+      // cabeçalho X-Forwarded-Proto (graças ao trustProxy em server.ts) para saber se o
+      // navegador do usuário está em HTTPS. COOKIE_SECURE=true força sempre, se necessário.
+      secure: env.cookieSecure || request.protocol === 'https',
       path: '/',
       maxAge: SETE_DIAS_EM_SEGUNDOS,
     })

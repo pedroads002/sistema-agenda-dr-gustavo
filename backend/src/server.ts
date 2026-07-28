@@ -23,7 +23,10 @@ import { rotasConfiguracoes } from './routes/configuracoes.js'
 import { rotasPainel } from './routes/painel.js'
 import { rotasBackup } from './routes/backup.js'
 
-const app = Fastify({ logger: true })
+// trustProxy: quando o acesso vem por trás de um proxy (ex.: Cloudflare Tunnel), confia no
+// cabeçalho X-Forwarded-Proto para saber se a conexão original do navegador era HTTPS —
+// usado para decidir o cookie de sessão (ver rotasAuth, cookie "secure").
+const app = Fastify({ logger: true, trustProxy: true })
 
 await app.register(cookie)
 await app.register(multipart, {

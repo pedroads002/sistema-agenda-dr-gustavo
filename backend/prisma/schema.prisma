@@ -7,7 +7,10 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" cobre o Mac (desenvolvimento); "debian-openssl-3.0.x" cobre o Linux usado
+  // pela Railway. Sem isso, o Prisma gerado localmente não roda em produção.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 model Usuario {

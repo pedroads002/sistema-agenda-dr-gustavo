@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "prisma generate && tsc",
-    "start": "prisma migrate deploy && node dist/server.js",
+    "start": "prisma migrate deploy && prisma db seed && node dist/server.js",
     "setup": "prisma migrate deploy && prisma db seed"
   },
   "dependencies": {
